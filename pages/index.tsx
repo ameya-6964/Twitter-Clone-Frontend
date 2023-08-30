@@ -1,5 +1,6 @@
 import React from "react";
 import { BsTwitter, BsBell, BsEnvelope, BsBookmark } from "react-icons/bs";
+import { GoogleLogin } from "@react-oauth/google";
 import { BiHomeCircle, BiHash, BiUser, BiMoney } from "react-icons/bi";
 import { SlOptions } from "react-icons/sl";
 
@@ -83,7 +84,12 @@ export default function Home() {
           <FeedCard />
           <FeedCard />
         </div>
-        <div className="col-span-2"></div>
+        <div className="col-span-2 p-5">
+          <div className="  rounded-lg">
+            <h1 className="my-3 text-2xl">New To Twitter?</h1>
+            <GoogleLogin onSuccess={(cred) => console.log(cred)} />
+          </div>
+        </div>
       </div>
     </div>
   );
