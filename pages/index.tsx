@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { BsTwitter, BsBell, BsEnvelope, BsBookmark } from "react-icons/bs";
-import { GoogleLogin } from "@react-oauth/google";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { BiHomeCircle, BiHash, BiUser, BiMoney } from "react-icons/bi";
 import { SlOptions } from "react-icons/sl";
 
@@ -47,6 +47,8 @@ const sideBarMenuItems: TwitterSidebarButton[] = [
 ];
 
 export default function Home() {
+  const handleLoginWithGoogle = useCallback((cred: CredentialResponse) => {},
+  []);
   return (
     <div>
       <div className="grid grid-cols-12 h-screen px-56">

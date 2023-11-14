@@ -25,13 +25,22 @@ const FeedCard: React.FC = () => {
           </p>
           <div className="flex justify-between mt-5 text-xl items-center p-2 w-[90%] ">
             <div>
-              <BiMessageRounded />
+              <BiMessageRounded
+                onMouseOver={(e: any) => (e.currentTarget.style.fill = "cyan")}
+                onMouseOut={(e: any) => (e.currentTarget.style.fill = "white")}
+              />
             </div>
             <div>
-              <FaRetweet />
+              <FaRetweet
+                onMouseOver={(e: any) => (e.currentTarget.style.fill = "green")}
+                onMouseOut={(e: any) => (e.currentTarget.style.fill = "white")}
+              />
             </div>
             <div>
-              <AiOutlineHeart />
+              <AiOutlineHeart
+                onMouseOver={(e: any) => (e.currentTarget.style.fill = "red")}
+                onMouseOut={(e: any) => (e.currentTarget.style.fill = "white")}
+              />
             </div>
             <div>
               <BiUpload />
