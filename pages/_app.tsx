@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Inter } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -9,6 +10,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <div className={inter.className}>
       <GoogleOAuthProvider clientId="66810103075-nnpu5lqebn2e31urpm6pfskb1a3jflf4.apps.googleusercontent.com">
         <Component {...pageProps} />
+        <Toaster />
       </GoogleOAuthProvider>
     </div>
   );
