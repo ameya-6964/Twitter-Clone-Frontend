@@ -3,11 +3,13 @@ import { BsTwitter, BsBell, BsEnvelope, BsBookmark } from "react-icons/bs";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { BiHomeCircle, BiHash, BiUser, BiMoney } from "react-icons/bi";
 import { SlOptions } from "react-icons/sl";
-
 import FeedCard from "@/Components/FeedCard";
 import toast from "react-hot-toast";
-import { graphQLClient } from "@/clients/api";
+import { graphqlClient } from "@/clients/api";
 import { verifyUserGoogleTokenQuery } from "@/graphql/query/user";
+import { useCurrentUser } from "@/hooks/user";
+import { useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
 
 interface TwitterSidebarButton {
   title: string;
@@ -50,13 +52,16 @@ const sideBarMenuItems: TwitterSidebarButton[] = [
 ];
 
 export default function Home() {
+  const { user } = useCurrentUser();
+  const queryClient = useQueryClient();
+
   const handleLoginWithGoogle = useCallback(
     async (cred: CredentialResponse) => {
       const googleToken = cred.credential;
       if (!googleToken) {
         return toast.error("Google Token Not Found");
       }
-      const { verifyGoogleToken } = await graphQLClient.request(
+      const { verifyGoogleToken } = await graphqlClient.request(
         verifyUserGoogleTokenQuery,
         {
           token: googleToken,
@@ -65,10 +70,12 @@ export default function Home() {
       toast.success("Verified Success");
       // console.log(verifyGoogleToken);
 
-      if (verifyGoogleToken)
+      if (verifyGoogleToken) {
         window.localStorage.setItem("__twitter_token", verifyGoogleToken);
+      }
+      await queryClient.invalidateQueries(["curent-user"]);
     },
-    []
+    [queryClient]
   );
   return (
     <div>
@@ -98,6 +105,24 @@ export default function Home() {
               </button>
             </div>
           </div>
+          {user && (
+            <div className="mt-5 flex gap-3 items-center">
+              {user && user.profileImageURL && (
+                <Image
+                  src={user?.profileImageURL}
+                  alt={user.firstname}
+                  height={50}
+                  width={50}
+                  className="rounded-full"
+                />
+              )}
+              <div>
+                <h3 className="text-xl">
+                  {user.firstname} {user.lastname}
+                </h3>
+              </div>
+            </div>
+          )}
         </div>
         <div className="col-span-6 border-r-[1px] border-l-[1px] h-screen overflow-y-scroll no-scrollbar border-gray-600">
           <FeedCard />
@@ -106,10 +131,12 @@ export default function Home() {
           <FeedCard />
         </div>
         <div className="col-span-2 p-5">
-          <div className="rounded-lg">
-            <h1 className="my-3 text-2xl font-bold">New To Twitter?</h1>
-            <GoogleLogin onSuccess={handleLoginWithGoogle} />
-          </div>
+          {!user && (
+            <div className="rounded-lg">
+              <h1 className="my-3 text-2xl font-bold">New To Twitter?</h1>
+              <GoogleLogin onSuccess={handleLoginWithGoogle} />
+            </div>
+          )}
         </div>
       </div>
     </div>
